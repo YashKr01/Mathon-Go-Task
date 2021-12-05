@@ -1,8 +1,5 @@
 package com.example.sampletask.model
 
-import androidx.room.Entity
-
-@Entity
 data class QuestionResponse(
     val approximateTimeRequired: Any,
     val category: Any,
