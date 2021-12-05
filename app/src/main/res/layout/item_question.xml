@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_margin="@dimen/_6sdp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_6sdp">
 
     <TextView
         android:id="@+id/item_question_number"
@@ -26,8 +26,8 @@
         android:orientation="vertical"
         android:paddingStart="@dimen/_6sdp"
         android:paddingTop="@dimen/_4sdp"
-        android:paddingBottom="@dimen/_4sdp"
         android:paddingEnd="@dimen/_4sdp"
+        android:paddingBottom="@dimen/_4sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_question_number"
@@ -56,5 +56,13 @@
             tools:text="JEE Main 2016" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/color_grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.QuestionsListFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/img_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_22sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:drawablePadding="@dimen/_8sdp"
+        android:text="@string/marks"
+        android:textAllCaps="true"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/_16ssp"
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/text_chapter_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:drawablePadding="@dimen/_8sdp"
+        android:text="@string/gravitation"
+        android:textAllCaps="false"
+        android:textColor="@color/color_black"
+        android:textSize="@dimen/_18ssp"
+        android:textStyle="bold"
+        app:drawableEndCompat="@drawable/ic_apple"
+        app:layout_constraintStart_toStartOf="@id/img_logo"
+        app:layout_constraintTop_toBottomOf="@id/img_logo" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/_232_qs_low_input_high_output_chapter"
+        android:textAllCaps="false"
+        android:textColor="@color/color_grey"
+        android:textSize="@dimen/_10ssp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/img_logo"
+        app:layout_constraintTop_toBottomOf="@id/text_chapter_name" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_questions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/_22sdp"
+        android:layout_marginTop="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_22sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:listitem="@layout/item_question" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
