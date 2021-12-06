@@ -12,4 +12,6 @@
     <string name="attempted">Showing Attempted</string>
     <string name="you_get_it_right">You got it right!</string>
     <string name="_01">01</string>
+    <string name="next_question">Next Question</string>
+    <string name="view_solution">View Solution</string>
 </resources>

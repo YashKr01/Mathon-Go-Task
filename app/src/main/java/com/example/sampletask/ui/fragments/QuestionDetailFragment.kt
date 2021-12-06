@@ -158,12 +158,22 @@ class QuestionDetailFragment : Fragment() {
             displayMessage()
         }
 
+        if (streak == 3) displayStreak()
+
+    }
+
+    private fun displayStreak() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            binding.viewStub.visibility = View.VISIBLE
+            delay(1400)
+            binding.viewStub.visibility = View.GONE
+        }
     }
 
     private fun displayMessage() {
         lifecycleScope.launch(Dispatchers.Main) {
             binding.txtMessage.visibility = View.VISIBLE
-            delay(800)
+            delay(1000)
             binding.txtMessage.visibility = View.GONE
         }
     }
