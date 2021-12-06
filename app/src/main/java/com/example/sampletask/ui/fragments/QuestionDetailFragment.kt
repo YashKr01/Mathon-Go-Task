@@ -23,6 +23,8 @@ class QuestionDetailFragment : Fragment() {
 
     private var currentSelected: Int? = null
     private var previousSelected: Int? = null
+
+    private var answered = false
     private var selected = false
 
     override fun onCreateView(
@@ -82,9 +84,37 @@ class QuestionDetailFragment : Fragment() {
             loadIndexQuestion(currentIndex, list)
         }
 
+        binding.btnNavigation.apply {
+            setOnClickListener {
+                if (binding.btnNavigation.text == resources.getString(R.string.next)) {
+                    currentIndex++
+                    loadIndexQuestion(currentIndex, list)
+                } else {
+                    Log.d(
+                        "TAG",
+                        "onCreateView: ${checkAnswer(currentIndex, list, currentSelected!!)}"
+                    )
+                }
+            }
+            text = resources.getString(R.string.next)
+        }
+
         loadIndexQuestion(index, list)
 
         return binding.root
+    }
+
+    private fun checkAnswer(
+        currentQuestion: Int,
+        list: Array<QuestionResponse>,
+        currentSelectedOption: Int
+    ): Boolean {
+        binding.btnNavigation.text = resources.getString(R.string.next)
+        val options = list[currentQuestion].options
+        options.forEachIndexed { index, option ->
+            if (option.isCorrect && index == currentSelectedOption - 1) return true
+        }
+        return false
     }
 
     private fun setSelectedBackground(current: Int?, previous: Int?) {
@@ -143,6 +173,7 @@ class QuestionDetailFragment : Fragment() {
             isClickable = false
             setTextColor(resources.getColor(R.color.color_grey))
             setBackgroundColor(resources.getColor(R.color.color_light_grey))
+            text = resources.getString(R.string.check_answer)
         }
     }
 
