@@ -2,7 +2,7 @@
     <string name="app_name">Sample Task</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="dummy_text">One line of question to be shown in previe...</string>
+    <string name="dummy_text">One line of question to be shown in previe…</string>
     <string name="marks">MARKS</string>
     <string name="gravitation">Gravitation</string>
     <string name="_232_qs_low_input_high_output_chapter">232 Qs | Low Input High Output Chapter</string>
@@ -10,4 +10,5 @@
     <string name="check_answer">Check Answer</string>
     <string name="not_attempted">Showing Not Attempted</string>
     <string name="attempted">Showing Attempted</string>
+    <string name="you_get_it_right">You got it right!</string>
 </resources>

@@ -36,6 +36,7 @@
         app:layout_constraintTop_toTopOf="@id/btn_navigation"
         app:tint="@color/color_primary_blue" />
 
+
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -195,6 +196,22 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <TextView
+        android:id="@+id/txt_message"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_50sdp"
+        android:alpha="0.85"
+        android:visibility="gone"
+        android:background="@color/color_green"
+        android:gravity="center"
+        android:text="@string/you_get_it_right"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/_16sdp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn_navigation"

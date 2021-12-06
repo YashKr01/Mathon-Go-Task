@@ -18,6 +18,8 @@ import com.example.sampletask.databinding.FragmentQuestionDetailBinding
 import com.example.sampletask.model.QuestionResponse
 import com.example.sampletask.viewmodel.QuestionDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -152,8 +154,18 @@ class QuestionDetailFragment : Fragment() {
             }
             index.background =
                 ContextCompat.getDrawable(requireContext(), R.drawable.background_wrong)
+        } else {
+            displayMessage()
         }
 
+    }
+
+    private fun displayMessage() {
+        lifecycleScope.launch(Dispatchers.Main) {
+            binding.txtMessage.visibility = View.VISIBLE
+            delay(800)
+            binding.txtMessage.visibility = View.GONE
+        }
     }
 
     private fun setSelectedBackground(current: Int?, previous: Int?) {
