@@ -7,8 +7,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.sampletask.R
 import com.example.sampletask.databinding.FragmentQuestionDetailBinding
@@ -31,11 +31,9 @@ class QuestionDetailFragment : Fragment() {
     ): View {
         _binding = FragmentQuestionDetailBinding.inflate(inflater, container, false)
 
-        Log.d("TAG", "onCreateView: ${args.position}")
-        Log.d("TAG", "onCreateView: ${args.questions.size}")
-
         val list = args.questions
         val index = args.position
+        var currentIndex = index
 
         binding.apply {
 
@@ -67,6 +65,21 @@ class QuestionDetailFragment : Fragment() {
                 setSelectedBackground(currentSelected, previousSelected)
             }
 
+            btnBack.setOnClickListener { findNavController().popBackStack() }
+
+        }
+
+        binding.btnPrevious.setOnClickListener {
+            Log.d("TAG", "onCreateView: PREV")
+            currentIndex--
+            if (currentIndex >= 0)
+                loadIndexQuestion(currentIndex, list)
+        }
+
+        binding.btnNext.setOnClickListener {
+            Log.d("TAG", "onCreateView: NEXT")
+            currentIndex++
+            loadIndexQuestion(currentIndex, list)
         }
 
         loadIndexQuestion(index, list)
@@ -75,7 +88,6 @@ class QuestionDetailFragment : Fragment() {
     }
 
     private fun setSelectedBackground(current: Int?, previous: Int?) {
-
 
         val currentIndex = when (current) {
             1 -> binding.txtOption1
@@ -100,6 +112,21 @@ class QuestionDetailFragment : Fragment() {
 
     }
 
+    private fun clearSelection(current: Int?) {
+
+        if (current != null) {
+            val currentIndex = when (current) {
+                1 -> binding.txtOption1
+                2 -> binding.txtOption2
+                3 -> binding.txtOption3
+                else -> binding.txtOption4
+            }
+            currentIndex.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
+        }
+
+    }
+
     private fun enableButton() {
         selected = true
         binding.btnNavigation.apply {
@@ -109,8 +136,42 @@ class QuestionDetailFragment : Fragment() {
         }
     }
 
+    private fun disableButton() {
+
+        selected = false
+        binding.btnNavigation.apply {
+            isClickable = false
+            setTextColor(resources.getColor(R.color.color_grey))
+            setBackgroundColor(resources.getColor(R.color.color_light_grey))
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun loadIndexQuestion(index: Int, list: Array<QuestionResponse>) {
+
+        Log.d("TAG", "loadIndexQuestion: $index")
+
+        disableButton()
+        clearSelection(currentSelected)
+        currentSelected = null
+        previousSelected = null
+
+        if (index == 0) {
+            binding.btnPrevious.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.color_grey
+                ), android.graphics.PorterDuff.Mode.MULTIPLY
+            )
+        } else {
+            binding.btnPrevious.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.color_primary_blue
+                ), android.graphics.PorterDuff.Mode.MULTIPLY
+            )
+        }
+
         val question = list[index]
         binding.apply {
             txtPaper.text = question.exams[0] + " " + question.previousYearPapers[0]
