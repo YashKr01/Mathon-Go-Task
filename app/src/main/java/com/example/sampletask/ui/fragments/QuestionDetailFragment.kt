@@ -24,7 +24,6 @@ class QuestionDetailFragment : Fragment() {
     private var currentSelected: Int? = null
     private var previousSelected: Int? = null
 
-    private var answered = false
     private var selected = false
 
     override fun onCreateView(
@@ -90,10 +89,7 @@ class QuestionDetailFragment : Fragment() {
                     currentIndex++
                     loadIndexQuestion(currentIndex, list)
                 } else {
-                    Log.d(
-                        "TAG",
-                        "onCreateView: ${checkAnswer(currentIndex, list, currentSelected!!)}"
-                    )
+                    displayResult(currentIndex, list, currentSelected!!)
                 }
             }
             text = resources.getString(R.string.next)
@@ -104,17 +100,40 @@ class QuestionDetailFragment : Fragment() {
         return binding.root
     }
 
-    private fun checkAnswer(
+    private fun displayResult(
         currentQuestion: Int,
         list: Array<QuestionResponse>,
         currentSelectedOption: Int
-    ): Boolean {
+    ) {
         binding.btnNavigation.text = resources.getString(R.string.next)
         val options = list[currentQuestion].options
+
+        var correctOptionIndex = -1
         options.forEachIndexed { index, option ->
-            if (option.isCorrect && index == currentSelectedOption - 1) return true
+            if (option.isCorrect) correctOptionIndex = index
         }
-        return false
+        correctOptionIndex++
+
+        val currentIndex = when (correctOptionIndex) {
+            1 -> binding.txtOption1
+            2 -> binding.txtOption2
+            3 -> binding.txtOption3
+            else -> binding.txtOption4
+        }
+        currentIndex.background =
+            ContextCompat.getDrawable(requireContext(), R.drawable.background_correct)
+
+        if (correctOptionIndex != currentSelectedOption) {
+            val index = when (currentSelectedOption) {
+                1 -> binding.txtOption1
+                2 -> binding.txtOption2
+                3 -> binding.txtOption3
+                else -> binding.txtOption4
+            }
+            index.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_wrong)
+        }
+
     }
 
     private fun setSelectedBackground(current: Int?, previous: Int?) {
