@@ -64,13 +64,21 @@ class QuestionsListFragment : Fragment() {
         viewModel.list.observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Resource.Loading -> {
-                    Log.d("TAG", "onCreateView: LOADING")
+                    binding.shimmerLayout.startShimmer()
                 }
                 is Resource.Success -> {
+                    binding.shimmerLayout.apply {
+                        stopShimmer()
+                        visibility = View.GONE
+                    }
                     list = result.data!!
                     questionAdapter.submitList(result.data)
                 }
                 is Resource.Error -> {
+                    binding.shimmerLayout.apply {
+                        stopShimmer()
+                        visibility = View.GONE
+                    }
                     Snackbar.make(
                         requireContext(),
                         binding.root,

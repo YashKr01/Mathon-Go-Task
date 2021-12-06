@@ -11,4 +11,5 @@
     <string name="not_attempted">Showing Not Attempted</string>
     <string name="attempted">Showing Attempted</string>
     <string name="you_get_it_right">You got it right!</string>
+    <string name="_01">01</string>
 </resources>
