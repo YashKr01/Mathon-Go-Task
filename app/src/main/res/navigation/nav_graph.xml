@@ -18,5 +18,12 @@
         android:id="@+id/questionDetailFragment"
         android:name="com.example.sampletask.ui.fragments.QuestionDetailFragment"
         android:label="fragment_question_detail"
-        tools:layout="@layout/fragment_question_detail" />
+        tools:layout="@layout/fragment_question_detail" >
+        <argument
+            android:name="questions"
+            app:argType="com.example.sampletask.model.QuestionResponse[]" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+    </fragment>
 </navigation>

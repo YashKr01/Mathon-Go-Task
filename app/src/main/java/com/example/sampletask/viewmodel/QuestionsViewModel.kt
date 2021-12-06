@@ -17,6 +17,7 @@ class QuestionsViewModel @Inject constructor(private val repository: NetworkRepo
     ViewModel() {
 
     var list = MutableLiveData<Resource<List<QuestionResponse>>>()
+    var isLoaded = false
 
     fun getQuestionsList() = viewModelScope.launch {
         list.postValue(Resource.Loading(null))

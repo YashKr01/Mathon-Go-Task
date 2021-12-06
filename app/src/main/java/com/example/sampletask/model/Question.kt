@@ -1,6 +1,9 @@
 package com.example.sampletask.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Question(
-    val image: Any,
     val text: String
-)
+) : Parcelable

@@ -9,19 +9,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sampletask.databinding.ItemQuestionBinding
 import com.example.sampletask.model.QuestionResponse
 
-class QuestionsAdapter(private val context: Context) :
+class QuestionsAdapter(
+    private val context: Context,
+    private val onItemClick: (Int) -> Unit
+) :
     ListAdapter<QuestionResponse, QuestionsAdapter.ItemViewHolder>(ItemComparator()) {
 
-    inner class ItemViewHolder(private val view: ItemQuestionBinding) :
-        RecyclerView.ViewHolder(view.root) {
+    inner class ItemViewHolder(private val binding: ItemQuestionBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
         fun bind(item: QuestionResponse, position: Int) {
-            view.apply {
+            binding.apply {
                 itemQuestion.text = item.question.text
                 itemQuestionPaper.text = item.exams[0] + " " + item.previousYearPapers[0]
                 itemQuestionNumber.text = position.toString()
+
+                root.setOnClickListener {
+                    onItemClick(adapterPosition)
+                }
             }
+
         }
 
     }
