@@ -84,7 +84,4 @@ dependencies {
     kapt "androidx.room:room-compiler:2.3.0"
     implementation "androidx.room:room-ktx:2.3.0"
 
-    // MathJax
-    implementation 'io.github.sidvenu.mathjaxview:mathjaxview:1.0.7'
-
 }
