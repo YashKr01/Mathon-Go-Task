@@ -1,13 +1,18 @@
 package com.example.sampletask.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.navArgs
+import com.example.sampletask.R
 import com.example.sampletask.databinding.FragmentQuestionDetailBinding
+import com.example.sampletask.model.QuestionResponse
 
 class QuestionDetailFragment : Fragment() {
 
@@ -15,6 +20,10 @@ class QuestionDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args by navArgs<QuestionDetailFragmentArgs>()
+
+    private var currentSelected: Int? = null
+    private var previousSelected: Int? = null
+    private var selected = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,8 +34,95 @@ class QuestionDetailFragment : Fragment() {
         Log.d("TAG", "onCreateView: ${args.position}")
         Log.d("TAG", "onCreateView: ${args.questions.size}")
 
+        val list = args.questions
+        val index = args.position
+
+        binding.apply {
+
+            txtOption1.setOnClickListener {
+                previousSelected = currentSelected
+                currentSelected = 1
+                enableButton()
+                setSelectedBackground(currentSelected, previousSelected)
+            }
+
+            txtOption2.setOnClickListener {
+                previousSelected = currentSelected
+                currentSelected = 2
+                enableButton()
+                setSelectedBackground(currentSelected, previousSelected)
+            }
+
+            txtOption3.setOnClickListener {
+                previousSelected = currentSelected
+                currentSelected = 3
+                enableButton()
+                setSelectedBackground(currentSelected, previousSelected)
+            }
+
+            txtOption4.setOnClickListener {
+                previousSelected = currentSelected
+                currentSelected = 4
+                enableButton()
+                setSelectedBackground(currentSelected, previousSelected)
+            }
+
+        }
+
+        loadIndexQuestion(index, list)
 
         return binding.root
+    }
+
+    private fun setSelectedBackground(current: Int?, previous: Int?) {
+
+
+        val currentIndex = when (current) {
+            1 -> binding.txtOption1
+            2 -> binding.txtOption2
+            3 -> binding.txtOption3
+            else -> binding.txtOption4
+        }
+        currentIndex.background =
+            ContextCompat.getDrawable(requireContext(), R.drawable.background_selected)
+
+        if (current != null && previous != null && current != previous) {
+            val previousIndex = when (previous) {
+                1 -> binding.txtOption1
+                2 -> binding.txtOption2
+                3 -> binding.txtOption3
+                else -> binding.txtOption4
+            }
+
+            previousIndex.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
+        }
+
+    }
+
+    private fun enableButton() {
+        selected = true
+        binding.btnNavigation.apply {
+            isClickable = true
+            setTextColor(resources.getColor(R.color.color_white))
+            setBackgroundColor(resources.getColor(R.color.color_primary_blue))
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun loadIndexQuestion(index: Int, list: Array<QuestionResponse>) {
+        val question = list[index]
+        binding.apply {
+            txtPaper.text = question.exams[0] + " " + question.previousYearPapers[0]
+            txtQuestion.text = question.question.text
+            txtQuestionNumber.text = "0$index (Single Correct)"
+
+            txtOption1.text = question.options[0].text
+            txtOption2.text = question.options[1].text
+            txtOption3.text = question.options[2].text
+            txtOption4.text = question.options[3].text
+
+        }
     }
 
     override fun onDestroyView() {
