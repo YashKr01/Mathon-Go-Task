@@ -27,6 +27,8 @@ class QuestionsListFragment : Fragment() {
 
     private val viewModel by viewModels<QuestionsViewModel>()
 
+    var attempted = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +48,7 @@ class QuestionsListFragment : Fragment() {
             })
 
         binding.recyclerViewQuestions.apply {
+            itemAnimator = null
             layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
             adapter = questionAdapter
@@ -73,9 +76,27 @@ class QuestionsListFragment : Fragment() {
                         binding.root,
                         "An Error Occurred",
                         Snackbar.LENGTH_SHORT
-                    ).show()
+                    ).setAction("RETRY") {
+                        viewModel.getQuestionsList()
+                    }.show()
                 }
             }
+        }
+
+        viewModel.getAttemptedQuestionsList().observe(viewLifecycleOwner) { questionList ->
+            viewModel.databaseList.clear()
+            viewModel.databaseList.addAll(questionList)
+        }
+
+        binding.txtFilter.setOnClickListener {
+            if (!attempted) {
+                binding.txtFilter.text = getString(R.string.attempted)
+                questionAdapter.submitList(viewModel.databaseList)
+            } else {
+                questionAdapter.submitList(viewModel.storedList)
+                binding.txtFilter.text = resources.getString(R.string.not_attempted)
+            }
+            attempted = !attempted
         }
 
         return binding.root

@@ -1,5 +1,6 @@
 package com.example.sampletask.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,10 +14,12 @@ import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
-class QuestionsViewModel @Inject constructor(private val repository: NetworkRepository) :
-    ViewModel() {
+class QuestionsViewModel @Inject constructor(
+    private val repository: NetworkRepository,
+) : ViewModel() {
 
     var list = MutableLiveData<Resource<List<QuestionResponse>>>()
+    var storedList = emptyList<QuestionResponse>()
     var isLoaded = false
 
     fun getQuestionsList() = viewModelScope.launch {
@@ -24,6 +27,7 @@ class QuestionsViewModel @Inject constructor(private val repository: NetworkRepo
         try {
             val response = repository.getQuestionsList()
             list.postValue(Resource.Success(response))
+            storedList = response
         } catch (e: IOException) {
             list.postValue(Resource.Error("No Connection", null))
         } catch (e: HttpException) {
@@ -32,4 +36,11 @@ class QuestionsViewModel @Inject constructor(private val repository: NetworkRepo
 
     }
 
+    val databaseList = ArrayList<QuestionResponse>()
+
+    fun getAttemptedQuestionsList(): LiveData<List<QuestionResponse>> =
+        repository.getAttemptedQuestionsList()
+
 }
+
+

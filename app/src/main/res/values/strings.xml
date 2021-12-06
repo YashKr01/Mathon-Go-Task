@@ -8,4 +8,6 @@
     <string name="_232_qs_low_input_high_output_chapter">232 Qs | Low Input High Output Chapter</string>
     <string name="next">Next</string>
     <string name="check_answer">Check Answer</string>
+    <string name="not_attempted">Not Attempted</string>
+    <string name="attempted">Attempted</string>
 </resources>
