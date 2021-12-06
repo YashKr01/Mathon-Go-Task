@@ -33,7 +33,7 @@ class QuestionDetailFragment : Fragment() {
     private var selected = false
     private var streak = 0
 
-    val viewModel by viewModels<QuestionDetailViewModel>()
+    private val viewModel by viewModels<QuestionDetailViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -80,14 +80,12 @@ class QuestionDetailFragment : Fragment() {
         }
 
         binding.btnPrevious.setOnClickListener {
-            Log.d("TAG", "onCreateView: PREV")
             currentIndex--
             if (currentIndex >= 0)
                 loadIndexQuestion(currentIndex, list)
         }
 
         binding.btnNext.setOnClickListener {
-            Log.d("TAG", "onCreateView: NEXT")
             currentIndex++
             loadIndexQuestion(currentIndex, list)
         }
@@ -241,7 +239,8 @@ class QuestionDetailFragment : Fragment() {
         binding.apply {
             txtPaper.text = question.exams[0] + " " + question.previousYearPapers[0]
             txtQuestion.text = question.question.text
-            txtQuestionNumber.text = "0$index (Single Correct)"
+            txtQuestionNumber.text =
+                if (index < 9) "0${index + 1} (Single Correct)" else "${index + 1} (Single Correct)"
 
             txtOption1.text = question.options[0].text
             txtOption2.text = question.options[1].text

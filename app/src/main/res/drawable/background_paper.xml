@@ -3,8 +3,5 @@
 
     <corners android:radius="@dimen/_6sdp" />
     <solid android:color="@color/color_secondary_blue" />
-    <stroke
-        android:width="@dimen/_1sdp"
-        android:color="@color/color_primary_blue" />
 
 </shape>

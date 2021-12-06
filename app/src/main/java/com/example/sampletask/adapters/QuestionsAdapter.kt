@@ -23,7 +23,8 @@ class QuestionsAdapter(
             binding.apply {
                 itemQuestion.text = item.question.text
                 itemQuestionPaper.text = item.exams[0] + " " + item.previousYearPapers[0]
-                itemQuestionNumber.text = "0${position + 1}"
+                itemQuestionNumber.text =
+                    if (position < 9) "0${position + 1}" else (position + 1).toString()
 
                 root.setOnClickListener {
                     onItemClick(adapterPosition)
