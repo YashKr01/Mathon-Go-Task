@@ -8,12 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.sampletask.R
 import com.example.sampletask.databinding.FragmentQuestionDetailBinding
 import com.example.sampletask.model.QuestionResponse
+import com.example.sampletask.viewmodel.QuestionDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class QuestionDetailFragment : Fragment() {
 
     private var _binding: FragmentQuestionDetailBinding? = null
@@ -25,6 +31,9 @@ class QuestionDetailFragment : Fragment() {
     private var previousSelected: Int? = null
 
     private var selected = false
+    private var streak = 0
+
+    val viewModel by viewModels<QuestionDetailViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -108,6 +117,11 @@ class QuestionDetailFragment : Fragment() {
         binding.btnNavigation.text = resources.getString(R.string.next)
         val options = list[currentQuestion].options
 
+        lifecycleScope.launch {
+            viewModel.insertQuestion(list[currentQuestion])
+        }
+
+        streak++
         var correctOptionIndex = -1
         options.forEachIndexed { index, option ->
             if (option.isCorrect) correctOptionIndex = index
@@ -124,6 +138,7 @@ class QuestionDetailFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.background_correct)
 
         if (correctOptionIndex != currentSelectedOption) {
+            streak = 0
             val index = when (currentSelectedOption) {
                 1 -> binding.txtOption1
                 2 -> binding.txtOption2
@@ -161,16 +176,16 @@ class QuestionDetailFragment : Fragment() {
 
     }
 
-    private fun clearSelection(current: Int?) {
+    private fun clearSelection() {
 
-        if (current != null) {
-            val currentIndex = when (current) {
-                1 -> binding.txtOption1
-                2 -> binding.txtOption2
-                3 -> binding.txtOption3
-                else -> binding.txtOption4
-            }
-            currentIndex.background =
+        binding.apply {
+            txtOption1.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
+            txtOption2.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
+            txtOption3.background =
+                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
+            txtOption4.background =
                 ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
         }
 
@@ -202,7 +217,7 @@ class QuestionDetailFragment : Fragment() {
         Log.d("TAG", "loadIndexQuestion: $index")
 
         disableButton()
-        clearSelection(currentSelected)
+        clearSelection()
         currentSelected = null
         previousSelected = null
 
