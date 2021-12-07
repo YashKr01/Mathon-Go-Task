@@ -28,9 +28,12 @@ class QuestionsViewModel @Inject constructor(
             val response = repository.getQuestionsList()
             list.postValue(Resource.Success(response))
             storedList = response
+            isLoaded = true
         } catch (e: IOException) {
+            isLoaded = false
             list.postValue(Resource.Error("No Connection", null))
         } catch (e: HttpException) {
+            isLoaded = false
             list.postValue(Resource.Error("An Error Occurred", null))
         }
 

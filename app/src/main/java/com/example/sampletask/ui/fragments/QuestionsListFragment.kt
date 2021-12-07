@@ -39,12 +39,19 @@ class QuestionsListFragment : Fragment() {
         var list = emptyList<QuestionResponse>()
         val questionAdapter = QuestionsAdapter(requireContext(),
             onItemClick = { position ->
+                val listArgument = arrayListOf<QuestionResponse>()
+                if (binding.txtFilter.text.equals(resources.getString(R.string.not_attempted))) {
+                    listArgument.clear()
+                    listArgument.addAll(list)
+                } else {
+                    listArgument.clear()
+                    listArgument.addAll(viewModel.databaseList)
+                }
                 val action =
                     QuestionsListFragmentDirections.actionQuestionsListFragmentToQuestionDetailFragment(
                         list.toTypedArray(), position
                     )
                 findNavController().navigate(action)
-                Log.d("TAG", "onCreateView: $position")
             })
 
         binding.recyclerViewQuestions.apply {
@@ -55,13 +62,11 @@ class QuestionsListFragment : Fragment() {
         }
 
         // loading from viewModel
-        if (!viewModel.isLoaded) {
-            viewModel.isLoaded = true
-            viewModel.getQuestionsList()
-        }
+        if (!viewModel.isLoaded) viewModel.getQuestionsList()
 
         // observe viewModel data
         viewModel.list.observe(viewLifecycleOwner) { result ->
+//            binding.layoutEmpty.visibility = View.GONE
             when (result) {
                 is Resource.Loading -> {
                     binding.shimmerLayout.startShimmer()
@@ -85,6 +90,7 @@ class QuestionsListFragment : Fragment() {
                         "An Error Occurred",
                         Snackbar.LENGTH_SHORT
                     ).setAction("RETRY") {
+                        binding.shimmerLayout.startShimmer()
                         viewModel.getQuestionsList()
                     }.show()
                 }

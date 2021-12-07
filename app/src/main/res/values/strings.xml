@@ -14,4 +14,6 @@
     <string name="_01">01</string>
     <string name="next_question">Next Question</string>
     <string name="view_solution">View Solution</string>
+    <string name="clear_filters">Clear Filters</string>
+    <string name="dummy_filter_text">Oops! We couldn’t find any question with the selected filters. Please try clearing them.</string>
 </resources>
