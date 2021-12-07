@@ -13,6 +13,7 @@ import com.example.sampletask.R
 import com.example.sampletask.adapters.QuestionsAdapter
 import com.example.sampletask.databinding.FragmentQuestionsListBinding
 import com.example.sampletask.model.QuestionResponse
+import com.example.sampletask.utils.ExtensionFunctions.hide
 import com.example.sampletask.viewmodel.QuestionsViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -89,7 +90,7 @@ class QuestionsListFragment : Fragment() {
             questionAdapter.submitList(questionsList)
             binding.shimmerLayout.apply {
                 stopShimmer()
-                visibility = View.GONE
+                hide()
             }
         }
 
