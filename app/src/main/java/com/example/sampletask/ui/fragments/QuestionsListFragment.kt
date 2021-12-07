@@ -49,7 +49,7 @@ class QuestionsListFragment : Fragment() {
                 }
                 val action =
                     QuestionsListFragmentDirections.actionQuestionsListFragmentToQuestionDetailFragment(
-                        list.toTypedArray(), position
+                        listArgument.toTypedArray(), position
                     )
                 findNavController().navigate(action)
             })
