@@ -84,7 +84,7 @@ class QuestionsListFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            delay(3000)
+            delay(2000)
             questionsList.addAll(getData())
             viewModel.storedList = questionsList
             questionAdapter.submitList(questionsList)

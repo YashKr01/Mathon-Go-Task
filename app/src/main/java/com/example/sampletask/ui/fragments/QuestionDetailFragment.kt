@@ -1,14 +1,11 @@
 package com.example.sampletask.ui.fragments
 
 import android.annotation.SuppressLint
-import android.opengl.Visibility
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -16,6 +13,11 @@ import androidx.navigation.fragment.navArgs
 import com.example.sampletask.R
 import com.example.sampletask.databinding.FragmentQuestionDetailBinding
 import com.example.sampletask.model.QuestionResponse
+import com.example.sampletask.utils.ExtensionFunctions.hide
+import com.example.sampletask.utils.ExtensionFunctions.setLeftDrawable
+import com.example.sampletask.utils.ExtensionFunctions.setSrcColor
+import com.example.sampletask.utils.ExtensionFunctions.setTextViewBackground
+import com.example.sampletask.utils.ExtensionFunctions.show
 import com.example.sampletask.viewmodel.QuestionDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -30,14 +32,15 @@ class QuestionDetailFragment : Fragment() {
 
     private val args by navArgs<QuestionDetailFragmentArgs>()
 
-    private var currentSelected: Int? = null
-    private var previousSelected: Int? = null
+    private var currentSelectedOption: Int? = null
+    private var previousSelectedOption: Int? = null
 
     private var selected = false
-    private var streak = 0
+    private var currentStreak = 0
 
     private val viewModel by viewModels<QuestionDetailViewModel>()
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,31 +54,31 @@ class QuestionDetailFragment : Fragment() {
         binding.apply {
 
             txtOption1.setOnClickListener {
-                previousSelected = currentSelected
-                currentSelected = 1
+                previousSelectedOption = currentSelectedOption
+                currentSelectedOption = 1
                 enableButton()
-                setSelectedBackground(currentSelected, previousSelected)
+                setSelectedBackground(currentSelectedOption, previousSelectedOption)
             }
 
             txtOption2.setOnClickListener {
-                previousSelected = currentSelected
-                currentSelected = 2
+                previousSelectedOption = currentSelectedOption
+                currentSelectedOption = 2
                 enableButton()
-                setSelectedBackground(currentSelected, previousSelected)
+                setSelectedBackground(currentSelectedOption, previousSelectedOption)
             }
 
             txtOption3.setOnClickListener {
-                previousSelected = currentSelected
-                currentSelected = 3
+                previousSelectedOption = currentSelectedOption
+                currentSelectedOption = 3
                 enableButton()
-                setSelectedBackground(currentSelected, previousSelected)
+                setSelectedBackground(currentSelectedOption, previousSelectedOption)
             }
 
             txtOption4.setOnClickListener {
-                previousSelected = currentSelected
-                currentSelected = 4
+                previousSelectedOption = currentSelectedOption
+                currentSelectedOption = 4
                 enableButton()
-                setSelectedBackground(currentSelected, previousSelected)
+                setSelectedBackground(currentSelectedOption, previousSelectedOption)
             }
 
             btnBack.setOnClickListener { findNavController().popBackStack() }
@@ -84,8 +87,7 @@ class QuestionDetailFragment : Fragment() {
 
         binding.btnPrevious.setOnClickListener {
             currentIndex--
-            if (currentIndex >= 0)
-                loadIndexQuestion(currentIndex, list)
+            if (currentIndex >= 0) loadIndexQuestion(currentIndex, list)
         }
 
         binding.btnNext.setOnClickListener {
@@ -99,7 +101,7 @@ class QuestionDetailFragment : Fragment() {
                     currentIndex++
                     loadIndexQuestion(currentIndex, list)
                 } else {
-                    displayResult(currentIndex, list, currentSelected!!)
+                    displayResult(currentIndex, list, currentSelectedOption!!)
                 }
             }
             text = resources.getString(R.string.next)
@@ -118,7 +120,7 @@ class QuestionDetailFragment : Fragment() {
 
         binding.apply {
             btnNavigation.text = resources.getString(R.string.next)
-            txtSolution.visibility = View.VISIBLE
+            txtSolution.show()
             txtSolution.text = list[currentQuestion].solution.text
         }
 
@@ -128,92 +130,142 @@ class QuestionDetailFragment : Fragment() {
             viewModel.insertQuestion(list[currentQuestion])
         }
 
-        streak++
+        currentStreak++
         var correctOptionIndex = -1
         options.forEachIndexed { index, option ->
             if (option.isCorrect) correctOptionIndex = index
         }
         correctOptionIndex++
 
-        val currentIndex = when (correctOptionIndex) {
-            1 -> binding.txtOption1
-            2 -> binding.txtOption2
-            3 -> binding.txtOption3
-            else -> binding.txtOption4
+        // setting green background on correct option
+        when (correctOptionIndex) {
+            1 -> binding.txtOption1.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_correct)
+                setLeftDrawable(R.drawable.ic_option_a_correct)
+            }
+            2 -> binding.txtOption2.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_correct)
+                setLeftDrawable(R.drawable.ic_option_b_correct)
+            }
+            3 -> binding.txtOption3.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_correct)
+                setLeftDrawable(R.drawable.ic_option_c_corect)
+            }
+            else -> binding.txtOption4.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_correct)
+                setLeftDrawable(R.drawable.ic_option_d_correct)
+            }
         }
-        currentIndex.background =
-            ContextCompat.getDrawable(requireContext(), R.drawable.background_correct)
 
         if (correctOptionIndex != currentSelectedOption) {
-            streak = 0
-            val index = when (currentSelectedOption) {
-                1 -> binding.txtOption1
-                2 -> binding.txtOption2
-                3 -> binding.txtOption3
-                else -> binding.txtOption4
+            currentStreak = 0
+            when (currentSelectedOption) {
+                1 -> binding.txtOption1.apply {
+                    setTextViewBackground(requireContext(), R.drawable.background_wrong)
+                    setLeftDrawable(R.drawable.ic_option_a_wrong)
+                }
+                2 -> binding.txtOption2.apply {
+                    setTextViewBackground(requireContext(), R.drawable.background_wrong)
+                    setLeftDrawable(R.drawable.ic_option_b_wrong)
+                }
+                3 -> binding.txtOption3.apply {
+                    setTextViewBackground(requireContext(), R.drawable.background_wrong)
+                    setLeftDrawable(R.drawable.ic_option_c_wrong)
+                }
+                else -> binding.txtOption4.apply {
+                    setTextViewBackground(requireContext(), R.drawable.background_wrong)
+                    setLeftDrawable(R.drawable.ic_option_d_wrong)
+                }
             }
-            index.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.background_wrong)
-        } else {
-            displayMessage()
-        }
+        } else displayMessage()
 
-        if (streak == 3) displayStreak()
+
+        if (currentStreak == 3) displayStreak()
 
     }
 
     private fun displayStreak() {
         lifecycleScope.launch(Dispatchers.Main) {
-            binding.viewStub.visibility = View.VISIBLE
+            binding.viewStub.show()
             delay(1400)
-            binding.viewStub.visibility = View.GONE
+            binding.viewStub.hide()
         }
     }
 
     private fun displayMessage() {
         lifecycleScope.launch(Dispatchers.Main) {
-            binding.txtMessage.visibility = View.VISIBLE
+            binding.txtMessage.show()
             delay(1000)
-            binding.txtMessage.visibility = View.GONE
+            binding.txtMessage.hide()
         }
     }
 
     private fun setSelectedBackground(current: Int?, previous: Int?) {
 
-        val currentIndex = when (current) {
-            1 -> binding.txtOption1
-            2 -> binding.txtOption2
-            3 -> binding.txtOption3
-            else -> binding.txtOption4
-        }
-        currentIndex.background =
-            ContextCompat.getDrawable(requireContext(), R.drawable.background_selected)
-
-        if (current != null && previous != null && current != previous) {
-            val previousIndex = when (previous) {
-                1 -> binding.txtOption1
-                2 -> binding.txtOption2
-                3 -> binding.txtOption3
-                else -> binding.txtOption4
+        // setting blue image and background on current selected text view
+        when (current) {
+            1 -> binding.txtOption1.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_selected)
+                setLeftDrawable(R.drawable.ic_option_a_active)
             }
+            2 -> binding.txtOption2.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_selected)
+                setLeftDrawable(R.drawable.ic_option_b_active)
+            }
+            3 -> binding.txtOption3.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_selected)
+                setLeftDrawable(R.drawable.ic_option_c_active)
+            }
+            else -> binding.txtOption4.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_selected)
+                setLeftDrawable(R.drawable.ic_option_d_active)
+            }
+        }
 
-            previousIndex.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
+        // setting default image and background on previous selected text view
+        if (current != null && previous != null && current != previous) {
+            when (previous) {
+                1 -> binding.txtOption1.apply {
+                    setTextViewBackground(requireContext(), R.drawable.background_option)
+                    setLeftDrawable(R.drawable.ic_option_a_)
+                }
+                2 -> binding.txtOption2.apply {
+                    setTextViewBackground(requireContext(), R.drawable.background_option)
+                    setLeftDrawable(R.drawable.ic_option_b)
+                }
+                3 -> binding.txtOption3.apply {
+                    setTextViewBackground(requireContext(), R.drawable.background_option)
+                    setLeftDrawable(R.drawable.ic_option_c)
+                }
+                else -> binding.txtOption4.apply {
+                    setTextViewBackground(requireContext(), R.drawable.background_option)
+                    setLeftDrawable(R.drawable.ic_option_d)
+                }
+            }
         }
 
     }
 
+    // setting options text view to default state
     private fun clearSelection() {
 
         binding.apply {
-            txtOption1.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
-            txtOption2.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
-            txtOption3.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
-            txtOption4.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.background_option)
+            txtOption1.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_option)
+                setLeftDrawable(R.drawable.ic_option_a_)
+            }
+            txtOption2.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_option)
+                setLeftDrawable(R.drawable.ic_option_b)
+            }
+            txtOption3.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_option)
+                setLeftDrawable(R.drawable.ic_option_c)
+            }
+            txtOption4.apply {
+                setTextViewBackground(requireContext(), R.drawable.background_option)
+                setLeftDrawable(R.drawable.ic_option_d)
+            }
         }
 
     }
@@ -243,28 +295,17 @@ class QuestionDetailFragment : Fragment() {
 
         disableButton()
         clearSelection()
-        currentSelected = null
-        previousSelected = null
+        currentSelectedOption = null
+        previousSelectedOption = null
 
-        if (index == 0) {
-            binding.btnPrevious.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.color_grey
-                ), android.graphics.PorterDuff.Mode.MULTIPLY
-            )
-        } else {
-            binding.btnPrevious.setColorFilter(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.color_primary_blue
-                ), android.graphics.PorterDuff.Mode.MULTIPLY
-            )
-        }
+        if (index == 0)
+            binding.btnPrevious.setSrcColor(requireContext(), R.color.color_grey)
+        else
+            binding.btnPrevious.setSrcColor(requireContext(), R.color.color_primary_blue)
 
         val question = list[index]
         binding.apply {
-            txtSolution.visibility = View.GONE
+            txtSolution.hide()
             txtPaper.text = question.exams[0] + " " + question.previousYearPapers[0]
             txtQuestion.text = question.question.text
             txtQuestionNumber.text =
