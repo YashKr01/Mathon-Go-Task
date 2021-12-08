@@ -86,8 +86,10 @@ class QuestionDetailFragment : Fragment() {
         }
 
         binding.btnPrevious.setOnClickListener {
-            currentIndex--
-            if (currentIndex >= 0) loadIndexQuestion(currentIndex, list)
+            if (currentIndex > 0) {
+                currentIndex--
+                loadIndexQuestion(currentIndex, list)
+            }
         }
 
         binding.btnNext.setOnClickListener {
@@ -100,10 +102,10 @@ class QuestionDetailFragment : Fragment() {
                 if (binding.btnNavigation.text == resources.getString(R.string.next)) {
                     currentIndex++
                     loadIndexQuestion(currentIndex, list)
-                } else {
-                    displayResult(currentIndex, list, currentSelectedOption!!)
-                }
+                } else displayResult(currentIndex, list, currentSelectedOption!!)
+
             }
+
             text = resources.getString(R.string.next)
         }
 
@@ -178,7 +180,6 @@ class QuestionDetailFragment : Fragment() {
                 }
             }
         } else displayMessage()
-
 
         if (currentStreak == 3) displayStreak()
 

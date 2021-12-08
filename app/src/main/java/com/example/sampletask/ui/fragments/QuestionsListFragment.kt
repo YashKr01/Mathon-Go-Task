@@ -45,12 +45,13 @@ class QuestionsListFragment : Fragment() {
             onItemClick = { position ->
 
                 val action1 =
-                    QuestionsListFragmentDirections.actionQuestionsListFragmentToQuestionDetailFragment(
-                        questionsList.toTypedArray(), position
-                    )
+                    QuestionsListFragmentDirections
+                        .actionQuestionsListFragmentToQuestionDetailFragment(
+                            questionsList.toTypedArray(), position)
 
                 val action2 =
-                    QuestionsListFragmentDirections.actionQuestionsListFragmentToQuestionDetailFragment(
+                    QuestionsListFragmentDirections
+                        .actionQuestionsListFragmentToQuestionDetailFragment(
                         viewModel.databaseList.toTypedArray(), position
                     )
 
