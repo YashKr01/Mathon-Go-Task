@@ -23,6 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 @AndroidEntryPoint
 class QuestionDetailFragment : Fragment() {
@@ -38,6 +39,7 @@ class QuestionDetailFragment : Fragment() {
     private var selected = false
     private var currentStreak = 0
 
+    private var currentIndex by Delegates.notNull<Int>()
     private val viewModel by viewModels<QuestionDetailViewModel>()
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -49,7 +51,7 @@ class QuestionDetailFragment : Fragment() {
 
         val list = args.questions
         val index = args.position
-        var currentIndex = index
+        currentIndex = index
 
         binding.apply {
 
@@ -181,15 +183,21 @@ class QuestionDetailFragment : Fragment() {
             }
         } else displayMessage()
 
-        if (currentStreak == 3) displayStreak()
+        if (currentStreak == 3) displayStreak(list)
 
     }
 
-    private fun displayStreak() {
+    private fun displayStreak(questionList: Array<QuestionResponse>) {
         lifecycleScope.launch(Dispatchers.Main) {
-            binding.viewStub.show()
-            delay(1400)
-            binding.viewStub.hide()
+            binding.apply {
+                viewStub.show()
+                btnViewSolution.setOnClickListener { viewStub.hide() }
+                btnNextQuestion.setOnClickListener {
+                    viewStub.hide()
+                    currentIndex++
+                    loadIndexQuestion(currentIndex, questionList)
+                }
+            }
         }
     }
 

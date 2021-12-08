@@ -47,13 +47,14 @@ class QuestionsListFragment : Fragment() {
                 val action1 =
                     QuestionsListFragmentDirections
                         .actionQuestionsListFragmentToQuestionDetailFragment(
-                            questionsList.toTypedArray(), position)
+                            questionsList.toTypedArray(), position
+                        )
 
                 val action2 =
                     QuestionsListFragmentDirections
                         .actionQuestionsListFragmentToQuestionDetailFragment(
-                        viewModel.databaseList.toTypedArray(), position
-                    )
+                            viewModel.databaseList.toTypedArray(), position
+                        )
 
                 if (binding.txtFilter.text.equals(resources.getString(R.string.not_attempted)))
                     findNavController().navigate(action1)
@@ -74,7 +75,8 @@ class QuestionsListFragment : Fragment() {
         }
 
         binding.txtFilter.setOnClickListener {
-            if (!attempted) {
+            if (!attempted && !binding.shimmerLayout.isShimmerStarted) {
+                binding.shimmerLayout.stopShimmer()
                 binding.txtFilter.text = getString(R.string.attempted)
                 questionAdapter.submitList(viewModel.databaseList)
             } else {
